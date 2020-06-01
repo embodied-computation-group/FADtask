@@ -1,6 +1,6 @@
 # Face Affect Discrimination Task
 
-Basic face affect discrimination task, with a choice of precedures.
+Basic face affect discrimination task, with a choice of procedures.
 
 
 We aim to investigate how people discriminate between happy and angry facial expressions.
@@ -14,7 +14,7 @@ The run consists of 60 trials, and will take about 5 minutes.
 
 Want to participate?
 
-Get in touch with me (through Slack, or by sending me an e-mail (niianikolova [at] gmail [dot] com), and I will reply to you with a subject ID code (3 digits, e.g. 001), which you can enter when completing the task.
+Get in touch with me (through Slack, or by sending me an e-mail (niianikolova@gmail.com), and I will reply to you with a subject ID code (3 digits, e.g. 001), which you can enter when completing the task.
 
 Make sure you have a working installation of Matlab and Psychtoolbox (Windows: You'll also need GStreamer [download here: https://gstreamer.freedesktop.org/data/pkg/windows/1.16.2/gstreamer-1.0-msvc-x86_64-1.16.2.msi]). You can get Psychtoolbox here: http://psychtoolbox.org/download.html
 
