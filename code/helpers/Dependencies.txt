@@ -1,0 +1,21 @@
+Face Affect Discrimination (FAD) Task
+
+setupNdownStaircase.m
+updateStaircase.m
+
+displayConfig.m
+experimentEnd.m
+keyConfig.m
+
+SetupRand.m
+angle2pix.m
+struct2csv.m
+randInRange.m
+
+
+Psychtoolbox:
+Psychtoolbox-3-PTB_Beta-2019-08-07_V3.0.16
+
+Tested on:
+Windows 10
+MATLAB v9.5, with Statistics and Machine Learning Toolbox v11.4
