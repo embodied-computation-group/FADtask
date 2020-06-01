@@ -1,4 +1,4 @@
-# FADtask_2_Psi
+# Face Affect Discrimination Task
 
 Basic face affect discrimination task, with a choice of precedures.
 
