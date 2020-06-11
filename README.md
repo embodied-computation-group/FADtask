@@ -18,7 +18,7 @@ Get in touch with me (through Slack, or by sending me an e-mail (niianikolova@gm
 
 Make sure you have a working installation of Matlab and Psychtoolbox (Windows: You'll also need GStreamer [download here: https://gstreamer.freedesktop.org/data/pkg/windows/1.16.2/gstreamer-1.0-msvc-x86_64-1.16.2.msi]). You can get Psychtoolbox here: http://psychtoolbox.org/download.html
 
-Download & save 'FADtask_2_Psi' to a directory on your computer. The directory should contain the following: 
+Clone/download 'FADtask_2_Psi' to a directory on your computer. The directory should contain the following: 
    ./code 
    ./data 
    ./stimuli 
@@ -28,8 +28,7 @@ Use a ruler to measure the height and width of your screen (in cm), and note the
 
 To begin the experiment, navigate to the 'FADtask_2_Psi' directory, and run 'experimentLauncher.m', by opening it in Matlab and clicking the green 'Run' arrow button in the Editor toolstrip. You will be asked to enter basic demographic information, your subject ID, and display dimension and viewing distance. If you leave the screen dimensions and viewing distance blank, the default size will be used. Then, the run will begin. Press Esc to quit (partial results will be saved).
 
-*** Note that a large yellow & red warning screen displays at he start of the experiment. This is due to the ptb screen checks and doesn't influence the experiment.***
 
-When you have completed a run, the data will be saved in ./data/ with your subject ID. Please e-mail this file back to me.
+When you have completed a run, the data will be saved in ./data/ with your subject ID in a .mat file. Please e-mail this file back to me.
 
 I appreciate any feedback and bug reports! :)  Contact: niianikolova@gmail.com 
