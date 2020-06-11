@@ -12,6 +12,7 @@ angle2pix.m
 struct2csv.m
 randInRange.m
 
+Palamedes (in ./helpers)
 
 Psychtoolbox:
 Psychtoolbox-3-PTB_Beta-2019-08-07_V3.0.16

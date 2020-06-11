@@ -6,7 +6,7 @@ function [scr] = displayConfig(scr)
 %   scr         struct with screen / display settings
 % 
 % Niia Nikolova
-% Last edit: 08/04/2020
+% Last edit: 11/06/2020
 
 
 %% Set-up screen
@@ -48,7 +48,6 @@ scr.BackgroundGray = GrayIndex(scr.screenID);
 White = WhiteIndex(scr.screenID);
 Black = BlackIndex(scr.screenID);
 scr.TextColour = Black;
-scr.TextSize = 65;
 
 
 end

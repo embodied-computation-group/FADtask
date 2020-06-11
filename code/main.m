@@ -9,12 +9,12 @@ function main(vars, scr)
 %   2. N-down staircase, currently 4 interleaved staircases, 1-up 1-down
 %   3. Method of Constant Stimuli
 %
-% Input: 
+% Input:
 %   vars        struct with key parameters (most are deifne in loadParams.m)
 %   scr         struct with screen / display settings
-% 
+%
 % Niia Nikolova
-% Last edit: 01/06/2020
+% Last edit: 11/06/2020
 
 
 % Load the parameters
@@ -55,6 +55,12 @@ try
     %% Open screen window
     [scr.win, scr.winRect] = PsychImaging('OpenWindow', scr.screenID, scr.BackgroundGray);
     PsychColorCorrection('SetEncodingGamma', scr.win, 1/scr.GammaGuess);
+    % Set text size, dependent on screen resolution
+    if any(logical(scr.winRect(:)>4000))       % 4K resolution
+        scr.TextSize = 65;
+    else
+        scr.TextSize = 28;
+    end
     Screen('TextSize', scr.win, scr.TextSize);
     
     % Set priority for script execution to realtime priority:
@@ -70,6 +76,8 @@ try
     % Dummy calls to prevent delays
     ValidTrial = zeros(1,2);
     vars.RunSuccessfull = 0;
+    vars.Aborted = 0;
+    vars.Error = 0;
     WaitSecs(0.1);
     GetSecs;
     Resp = 888;
@@ -95,27 +103,27 @@ try
     WaitSecs(0.500);            % pause before experiment start
     thisTrial = 1;              % trial counter
     endOfExpt = 0;
-
-     while endOfExpt ~= 1       % General stop flag for the loop
+    
+    while endOfExpt ~= 1       % General stop flag for the loop
         
-         % Determine which stimulus to present, read in the image, adjust size and show stimulus
+        % Determine which stimulus to present, read in the image, adjust size and show stimulus
         switch vars.Procedure
             case 1 % 1 - Psi method adaptive
                 
                 switch vars.stairSwitch(thisTrial)
-                    case 0                                              % Female avg face                                         
+                    case 0                                              % Female avg face
                         thisTrialStim = stair.F.PM.xCurrent;            % double 0-200
                         thisTrialFileName = ['F_', sprintf('%03d', thisTrialStim), '.tif'];
                         
                     case 1                                              % Male avg face
-                        thisTrialStim = stair.M.PM.xCurrent;            
+                        thisTrialStim = stair.M.PM.xCurrent;
                         thisTrialFileName = ['M_', sprintf('%03d', thisTrialStim), '.tif'];
                 end
                 
                 disp(['Trial # ', num2str(thisTrial), '. Stim: ', thisTrialFileName]);
-
                 
-            case 2 % 2 - N-down staircase  
+                
+            case 2 % 2 - N-down staircase
                 switch vars.stairSwitch(thisTrial)
                     case 0 % Female high
                         stair.F.PMhi.x = [stair.F.PMhi.x, stair.F.PMhi.xCurrent];
@@ -139,14 +147,14 @@ try
                         stair.M.PMlo.x = [stair.M.PMlo.x, stair.M.PMlo.xCurrent];
                         thisTrialStim = stair.M.PMlo.xCurrent;            % double 0-200
                         thisTrialFileName = ['M_', sprintf('%03d', thisTrialStim), '.tif'];
-                        disp(['Stair 3, M lo. ','Trial # ', num2str(thisTrial), '. Stim: ', thisTrialFileName]);    
+                        disp(['Stair 3, M lo. ','Trial # ', num2str(thisTrial), '. Stim: ', thisTrialFileName]);
                 end
         end%procedure
         
         % Read stim image for this trial into matrix 'imdata'
         StimFilePath = strcat(vars.StimFolder, thisTrialFileName);
         ImDataOrig = imread(char(StimFilePath));
-        StimFileName = thisTrialFileName;                           
+        StimFileName = thisTrialFileName;
         ImData = imresize(ImDataOrig, [StimSizePix NaN]);           % Adjust image size to StimSize dva in Y dir
         
         % Update Results mat
@@ -154,7 +162,7 @@ try
         Results.StimFile(thisTrial) = StimFileName;
         Results.SubID(thisTrial) = vars.subNo;
         Results.Indiv(thisTrial) = StimFileName(1);
-        Results.MorphLevel(thisTrial) = str2double(StimFileName(3:5));    
+        Results.MorphLevel(thisTrial) = str2double(StimFileName(3:5));
         
         % Make texture image out of image matrix 'imdata'
         ImTex = Screen('MakeTexture', scr.win, ImData);
@@ -170,7 +178,7 @@ try
             if KeyCode(keys.Escape)==1
                 % Save, mark the run
                 vars.RunSuccessfull = 0;
-                vars.DataFileName = ['Aborted_', vars.DataFileName];
+                vars.Aborted = 1;
                 experimentEnd(vars, scr, keys, Results, stair);
                 return
             end
@@ -197,23 +205,23 @@ try
             % KbCheck for response
             if KeyCode(keys.Left)==1         % Angry
                 % update results
-                Resp = 0;                   
+                Resp = 0;
                 ValidTrial(1) = 1;
-                               
+                
             elseif KeyCode(keys.Right)==1    % Happy
                 % update results
                 Resp = 1;
                 ValidTrial(1) = 1;
-
+                
             elseif KeyCode(keys.Escape)==1
+                Results.EmoResp(thisTrial) = 9;
                 % Save, mark the run
-                Resp = 9;
                 vars.RunSuccessfull = 0;
-                vars.DataFileName = ['Aborted_', vars.DataFileName];
+                vars.Aborted = 1;
                 experimentEnd(vars, scr, keys, Results, stair);
                 return
             else
-                % ? DrawText: Please press a valid key...          
+                % ? DrawText: Please press a valid key...
             end
             
             [~, EndRT, KeyCode] = KbCheck;
@@ -233,9 +241,9 @@ try
                         case 1                          % Male avg face
                             stair.M.PM = PAL_AMPM_updatePM(stair.M.PM, Resp);
                     end
-
+                    
                     % Time to stop?
-                    if ((stair.F.PM.stop ~= 1) || (stair.M.PM.stop ~= 1))    
+                    if ((stair.F.PM.stop ~= 1) || (stair.M.PM.stop ~= 1))
                         endOfExpt = 0;
                     else
                         endOfExpt = 1;
@@ -269,15 +277,15 @@ try
                     
                 case 3 % MSC
                     % Time to stop? (max # trials or all reversals reached)
-                    if (thisTrial == vars.NTrialsTotal) 
+                    if (thisTrial == vars.NTrialsTotal)
                         endOfExpt = 1;
                     end
-
-            end%procedure  
+                    
+            end%procedure
         end
         
         % Compute response time
-        RT = (EndRT - StartRT);                                 
+        RT = (EndRT - StartRT);
         
         % Write trial result to file
         Results.EmoResp(thisTrial) = Resp;
@@ -308,10 +316,10 @@ try
                     ConfRating = 3;
                     ValidTrial(2) = 1;
                 elseif KeyCode(keys.Escape)==1
+                    Results.ConfResp(thisTrial) = 9;
                     % Save, mark the run
-                    ConfRating = 9;
                     vars.RunSuccessfull = 0;
-                    vars.DataFileName = ['Aborted_', vars.DataFileName];
+                    vars.Aborted = 1;
                     experimentEnd(vars, scr, keys, Results, stair);
                     return
                 else
@@ -353,8 +361,8 @@ try
             
             if KeyCode(keys.Escape)==1
                 % Save, mark the run
-                vars.RunSuccessfull = 0;              
-                vars.DataFileName = ['Aborted_', vars.DataFileName];
+                vars.RunSuccessfull = 0;
+                vars.Aborted = 1;
                 experimentEnd(vars, scr, keys, Results, stair);
                 return
             end
@@ -397,23 +405,18 @@ try
         
     end%thisTrial
     
-    
-    %% Show end screen and clean up
-    Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
-    DrawFormattedText(scr.win, vars.InstructionEnd, 'center', 'center', scr.TextColour);
-    [~, ~] = Screen('Flip', scr.win);
-    WaitSecs(3);
-    
     vars.RunSuccessfull = 1;
-    
-    % Save the data
-    save(strcat(vars.OutputFolder, vars.DataFileName), 'stair', 'Results', 'vars', 'scr', 'keys' );
-    disp(['Run complete. Results were saved as: ', vars.DataFileName]);
-    % and as .csv
-    Results.stair = stair;                      % Add staircase structure to Results to save
-    csvName = strcat(vars.OutputFolder, vars.DataFileName, '.csv');
-    struct2csv(Results, csvName);                                       %<----- PsiAdaptive: NOT SAVING .csv due to PF objects in Results struct#####
+    % Save, mark the run
+    experimentEnd(vars, scr, keys, Results, stair);
 
+    % Cleanup at end of experiment - Close window, show mouse cursor, close
+    % result file, switch back to priority 0
+    sca;
+    ShowCursor;
+    fclose('all');
+    Priority(0);
+    disp('Calculating threshold and slope estimates. This will take a few seconds...');
+    
     if vars.Procedure == 1 % Psi-Adaptive
         % Print thresh & slope estimates
         disp(['Threshold estimate, Female face: ', num2str(stair.F.PM.threshold(end))]);
@@ -427,33 +430,13 @@ try
         
     end
     
-    % Cleanup at end of experiment - Close window, show mouse cursor, close
-    % result file, switch back to priority 0
-    sca;
-    ShowCursor;
-    fclose('all');
-    Priority(0);
     
 catch
-    % Error. Clean up...
-    sca;
-    ShowCursor;
-    fclose('all');
-    Priority(0);
-    
-    % Save the data
+%     % Error. Clean up...
+
+    % Save, mark the run
     vars.RunSuccessfull = 0;
-    vars.DataFileName = ['Error_',vars.DataFileName];
-    save(strcat(vars.OutputFolder, vars.DataFileName), 'stair', 'Results', 'vars', 'scr', 'keys' );
-    % and as .csv
-    Results.stair = stair;                      % Add staircase structure to Results to save
-    csvName = strcat(vars.OutputFolder, vars.DataFileName, '.csv');
-    struct2csv(Results, csvName);
-    
-    disp(['Run crashed. Results were saved as: ', vars.DataFileName]);
-    disp(' ** Error!! ***')
-    
-    % Output the error message that describes the error:
-    psychrethrow(psychlasterror);
-    
+    vars.Error = 1;
+    experimentEnd(vars, scr, keys, Results, stair);
+   
 end

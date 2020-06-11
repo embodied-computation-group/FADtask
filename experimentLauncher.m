@@ -17,7 +17,7 @@ function experimentLauncher()
 % ======================================================
 %
 % Niia Nikolova
-% Last edit: 01/06/2020
+% Last edit: 11/06/2020
 
 
 %% Initial settings
@@ -30,16 +30,26 @@ vars.exptName = 'FAD_v1-2';
 
 
 %% Do system checks
-if ispc
-    % Windows: Skip internal synch checks, suppress warnings  
-    oldLevel = Screen('Preference', 'Verbosity', 0);
-    Screen('Preference', 'SkipSyncTests', 1);
-    
-elseif ismac || isunix
-    % Mac/Unix   
-    oldLevel = Screen('Preference', 'Verbosity', 0);
-    Screen('Preference', 'SkipSyncTests', 1);    
+% OS-dependent checks?
+% if ispc
+%     % Windows
+%     
+% elseif ismac || isunix
+%     % Mac/Unix   
+% 
+% end
+
+% Check that PTB is installed
+PTBv = PsychtoolboxVersion;
+if isempty(PTBv)
+    disp('Please install Psychtoolbox 3. Download and installation can be found here: http://psychtoolbox.org/download');
+    return
 end
+
+% Skip internal synch checks, suppress warnings
+oldLevel = Screen('Preference', 'Verbosity', 0);
+Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference','VisualDebugLevel', 0);
 
 % check working directory & change if necessary
 vars.workingDir = fullfile('FADtask_2_Psi');                      % <--- EDIT here as needed ####
