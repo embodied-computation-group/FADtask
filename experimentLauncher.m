@@ -69,6 +69,12 @@ addpath(genpath('code'));
 addpath(genpath('data'));
 addpath(genpath('stimuli'));
 
+%% Run both Psi and Ndown tasks
+% global PROCEDURE 
+% if isempty(PROCEDURE)
+% PROCEDURE = 1;
+
+
 %% Ask for subID, age, gender, and display details
 if ~devFlag % if we're testing
     

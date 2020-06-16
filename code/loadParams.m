@@ -12,7 +12,8 @@
 
 %% Key flags
 vars.ConfRating = 0;                                         % Confidence rating? (1 yes, 0 no)
-vars.Procedure = 1;                                          % 1 - Psi method adaptive, doi:https://doi.org/10.1167/13.7.3
+% vars.Procedure = PROCEDURE;
+vars.Procedure = 2;                                          % 1 - Psi method adaptive, doi:https://doi.org/10.1167/13.7.3
                                                              % 2 - N-down staircase
                                                              % 3 - Method of Constant Stimuli (used in Pilot 1)
 
