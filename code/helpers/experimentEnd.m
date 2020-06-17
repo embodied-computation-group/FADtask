@@ -3,12 +3,12 @@ function experimentEnd(vars, scr, keys, Results, stair)
 
 if vars.Procedure == 1 % Psi
     % clean up the stair structure & sub-structures (delete objects and 5D vars)
-    fields = {'PF'};
-    stair = rmfield(stair,fields);
-    fields = {'PF', 'LUT', 'posteriorTplus1givenSuccess', 'posteriorTplus1givenFailure'};
-    stair.F.PM = rmfield(stair.F.PM, fields);
-    fields = {'PF', 'LUT', 'posteriorTplus1givenSuccess', 'posteriorTplus1givenFailure'};
-    stair.M.PM = rmfield(stair.M.PM, fields);
+    %fields = {'PF'};
+    %stair = rmfield(stair,fields);
+    %fields = {'PF', 'LUT', 'posteriorTplus1givenSuccess', 'posteriorTplus1givenFailure'};
+    %stair.F.PM = rmfield(stair.F.PM, fields);
+    %fields = {'PF', 'LUT', 'posteriorTplus1givenSuccess', 'posteriorTplus1givenFailure'};
+    %stair.M.PM = rmfield(stair.M.PM, fields);
 end
 
 if vars.Aborted
