@@ -1,9 +1,6 @@
 # Face Affect Discrimination Task
 
-Basic face affect discrimination task, with a choice of procedures.
-
-
-We aim to investigate how people discriminate between happy and angry facial expressions.
+This task aims to investigate how people discriminate between happy and angry facial expressions.
 
 Who is eligible?
 
@@ -14,7 +11,7 @@ The run consists of 60 trials, and will take about 5 minutes.
 
 Want to participate?
 
-Get in touch with me (through Slack, or by sending me an e-mail (niianikolova@gmail.com), and I will reply to you with a subject ID code (3 digits, e.g. 001), which you can enter when completing the task.
+Pick a 3-digit subject ID code, e.g. 003
 
 Make sure you have a working installation of Matlab and Psychtoolbox (Windows: You'll also need GStreamer [download here: https://gstreamer.freedesktop.org/data/pkg/windows/1.16.2/gstreamer-1.0-msvc-x86_64-1.16.2.msi]). You can get Psychtoolbox here: http://psychtoolbox.org/download.html
 
@@ -29,6 +26,6 @@ Use a ruler to measure the height and width of your screen (in cm), and note the
 To begin the experiment, navigate to the 'FADtask_2_Psi' directory, and run 'experimentLauncher.m', by opening it in Matlab and clicking the green 'Run' arrow button in the Editor toolstrip. You will be asked to enter basic demographic information, your subject ID, and display dimension and viewing distance. If you leave the screen dimensions and viewing distance blank, the default size will be used. Then, the run will begin. Press Esc to quit (partial results will be saved).
 
 
-When you have completed a run, the data will be saved in ./data/ with your subject ID in a .mat file. Please send this file back to me.
+When you have completed a run, the data will be saved in ./data/ with your subject ID in a .mat file. Please send this file back.
 
-I appreciate any feedback and bug reports! :)  Contact: niianikolova@gmail.com 
+We appreciate any feedback and bug reports! :)  Contact: niianikolova@gmail.com 
