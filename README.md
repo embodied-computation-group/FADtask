@@ -1,6 +1,6 @@
 # Face Affect Discrimination Task
 
-This task aims to investigate how people discriminate between happy and angry facial expressions.
+This task aims to investigate how people discriminate between happy and angry facial expressions. It is possible to select between Method of Constant Stimuli, N-down, and bayesian adaptive Psi-method staircase procedures. 
 
 Who is eligible?
 
