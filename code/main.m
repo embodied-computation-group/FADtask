@@ -102,15 +102,12 @@ try
         
         [vars] = ELsetup(scr, vars);
     end
-    
-    
-    tic
+
     
     %% Show task instructions
     Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
     DrawFormattedText(scr.win, [vars.InstructionTask], 'center', 'center', scr.TextColour);
     [~, ~] = Screen('Flip', scr.win);
-    
     
     while keys.KeyCode(keys.Trigger) == 0                                    % Wait for trigger
         [~, ~, keys.KeyCode] = KbCheck;
@@ -121,6 +118,9 @@ try
     if useEyeLink
         Eyelink('message','STARTEXP');
     end
+    
+    
+    tic
     
     %% Run through trials
     WaitSecs(0.500);            % pause before experiment start
@@ -149,15 +149,13 @@ try
                 end
                 
                 switch vars.stairSwitch(thisTrial)
-                    case 0                                              % Female avg face
-                        thisTrialStim = stair.F.PM.xCurrent;            % double 0-200
-                        thisTrialFileName = [thisTrialGender, sprintf('%03d', thisTrialStim), '.tif'];
-                        
-                    case 1                                              % Male avg face
+                    case 0                                              % Low start staircase
+                        thisTrialStim = stair.F.PM.xCurrent;            % double 0-200 
+                    case 1                                              % High start staircase
                         thisTrialStim = stair.M.PM.xCurrent;
-                        thisTrialFileName = [thisTrialGender, sprintf('%03d', thisTrialStim), '.tif'];
                 end
                 
+                thisTrialFileName = [thisTrialGender, sprintf('%03d', thisTrialStim), '.tif'];
                 disp(['Trial # ', num2str(thisTrial), '. Stim: ', thisTrialFileName]);
                 
                 
@@ -194,14 +192,7 @@ try
         ImDataOrig = imread(char(StimFilePath));
         StimFileName = thisTrialFileName;
         ImData = imresize(ImDataOrig, [StimSizePix NaN]);           % Adjust image size to StimSize dva in Y dir
-%         
-%         % Update Results mat
-%         Results.trialN(thisTrial) = thisTrial;
-%         Results.StimFile(thisTrial) = StimFileName;
-%         Results.SubID(thisTrial) = vars.subNo;
-%         Results.Indiv(thisTrial) = StimFileName(1);
-%         Results.MorphLevel(thisTrial) = str2double(StimFileName(3:5));
-%         
+  
         % Make texture image out of image matrix 'imdata'
         ImTex = Screen('MakeTexture', scr.win, ImData);
         
@@ -268,78 +259,6 @@ try
             experimentEnd(vars, scr, keys, Results, stair);
             return
         end
-        %         % loop until valid key is pressed or RespT is reached
-        %         while ((GetSecs - StartRT) <= vars.RespT)
-        %
-        %             switch vars.InputDevice
-        %
-        %                 case 1 % Keyboard response
-        %
-        %                     % KbCheck for response
-        %                     if KeyCode(keys.Left)==1         % Angry
-        %                         % update results
-        %                         Resp = 0;
-        %                         ValidTrial(1) = 1;
-        %
-        %                     elseif KeyCode(keys.Right)==1    % Happy
-        %                         % update results
-        %                         Resp = 1;
-        %                         ValidTrial(1) = 1;
-        %
-        %                     elseif KeyCode(keys.Escape)==1
-        %                         Results.EmoResp(thisTrial) = 9;
-        %                         % Save, mark the run
-        %                         vars.RunSuccessfull = 0;
-        %                         vars.Aborted = 1;
-        %                         experimentEnd(vars, scr, keys, Results, stair);
-        %                         return
-        %                     else
-        %                         % ? DrawText: Please press a valid key...
-        %                     end
-        %
-        %                     [~, EndRT, KeyCode] = KbCheck;
-        %                     WaitSecs(0.001);
-        %
-        %
-        %                 case 2 % Mouse
-        %
-        %                     [~,~,buttons] = GetMouse;
-        %                     while ~any(buttons) % wait for press
-        %                         [~,~,buttons] = GetMouse; % L [1 0 0], R [0 0 1]
-        %                     end
-        %
-        %                     if buttons == [1 0 0] % Left - angry
-        %                         % update results
-        %                         Resp = 0;
-        %                         ValidTrial(1) = 1;
-        %
-        %                     elseif buttons == [0 0 1] % Right - happy
-        %                         % update results
-        %                         Resp = 1;
-        %                         ValidTrial(1) = 1;
-        %
-        %                     else
-        %
-        %                     end
-        %
-        %                     EndRT = GetSecs;                                % ### check RT for mouseclick ###
-        %             end
-        %
-        %             if(ValidTrial(1)), WaitSecs(0.2); break; end
-        %         end
-        %
-        %         % Brief feedback                                            % ### change to * on response promp screen ###
-        %         if Resp% happy
-        %             emotString = 'Happy';
-        %         else
-        %             emotString = 'Angry';
-        %         end
-        %         feedbackString = ['Response recorded: ', emotString];
-        %         Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
-        %         DrawFormattedText(scr.win, feedbackString, 'center', 'center', scr.TextColour);
-        %         [~, ~] = Screen('Flip', scr.win);
-        %         WaitSecs(0.25);
-        %         disp(feedbackString);
         
         % Update staircase, if valid response
         if vars.ValidTrial(1)
@@ -401,103 +320,10 @@ try
         % Write trial result to file
         Results.EmoResp(thisTrial) = vars.Resp;
         Results.EmoRT(thisTrial) = RT;
+
         
         
         %% Confidence rating
-        %         if vars.ConfRating
-        %
-        %             switch vars.InputDevice
-        %
-        %                 case 1 % Keyboard response
-        %
-        %                     % Rate confidence: 1 Unsure, 2 Sure, 3 Very sure
-        %
-        %                     Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
-        %                     DrawFormattedText(scr.win, [vars.InstructionConf], 'center', 'center', scr.TextColour);
-        %                     [~, StartConf] = Screen('Flip', scr.win);
-        %
-        %                     if useEyeLink
-        %                         % EyeLink:  conf rating
-        %                         startStimText = ['Trial ' num2str(thisTrial) ' confidence screen on'];
-        %                         Eyelink('message', startStimText); % Send message
-        %                     end
-        %
-        %                     % loop until valid key is pressed or ConfT is reached
-        %                     while (GetSecs - StartConf) <= vars.ConfT
-        %
-        %                         % KbCheck for response
-        %                         if KeyCode(keys.One)==1
-        %                             % update results
-        %                             ConfRating = 1;
-        %                             ValidTrial(2) = 1;
-        %                         elseif KeyCode(keys.Two)==1
-        %                             % update results
-        %                             ConfRating = 2;
-        %                             ValidTrial(2) = 1;
-        %                         elseif KeyCode(keys.Three)==1
-        %                             % update results
-        %                             ConfRating = 3;
-        %                             ValidTrial(2) = 1;
-        %                         elseif KeyCode(keys.Escape)==1
-        %                             Results.ConfResp(thisTrial) = 9;
-        %                             % Save, mark the run
-        %                             vars.RunSuccessfull = 0;
-        %                             vars.Aborted = 1;
-        %                             experimentEnd(vars, scr, keys, Results, stair);
-        %                             return
-        %                         else
-        %                             % DrawText: Please press a valid key...
-        %                         end
-        %
-        %                         [~, EndConf, KeyCode] = KbCheck;
-        %                         WaitSecs(0.001);
-        %
-        %                         % Compute response time
-        %                         ConfRatingT = (EndConf - StartConf);
-        %
-        %                     end
-        %
-        %                 case 2 % Mouse response
-        %
-        %                     if useEyeLink
-        %                         % EyeLink:  conf rating
-        %                         startStimText = ['Trial ' num2str(thisTrial) ' confidence screen on'];
-        %                         Eyelink('message', startStimText); % Send message
-        %                     end
-        %
-        %                     [position, RT, answer] = slideScale(scr.win, ...
-        %                         vars.InstructionConf, ...
-        %                         scr.winRect, ...
-        %                         vars.ConfEndPoins, ...
-        %                         'device', 'mouse', ...
-        %                         'stepsize', 10, ...
-        %                         'responseKeys', [KbName('return') KbName('LeftArrow') KbName('RightArrow')], ...
-        %                         'startposition', 'center', ...
-        %                         'range', 2);
-        %
-        %                     % update results
-        %                     ConfRating = position;
-        %                     ConfRatingT = RT;
-        %
-        %                     if answer
-        %                     ValidTrial(2) = 1; end
-        %
-        %             end
-        %
-        %             % If this trial was successfull, move on...
-        %             if(ValidTrial(2)), WaitSecs(0.2); end
-        %
-        %             % Write trial result to file
-        %             Results.ConfResp(thisTrial) = ConfRating;
-        %             Results.ConfRT(thisTrial) = ConfRatingT;
-        %
-        %             disp(['Confidence recorded: ', num2str(ConfRating)]);
-        %
-        %             % Was this a successfull trial? (both emotion and confidence rating valid)
-        %             % 1-success, 0-fail
-        %             Results.trialSuccess(thisTrial) = logical(sum(vars.ValidTrial(1)) == 2);
-        %
-        
         if vars.ConfRating
             
             if useEyeLink

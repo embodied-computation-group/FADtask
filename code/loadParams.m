@@ -32,11 +32,6 @@ switch vars.Procedure
         stair.NumTrials = 30;                               % Number of trials in EACH staircase (2 interleaved staircases, showing M & F faces)               
         vars.NTrialsTotal = stair.NumTrials*2;              % Total N trials differs from stair.NumTrials when we have multiple staircases
         
-        % Generate face genders for the session & shuffle
-        [faceGendersArray, ~] = create_trials(0.5, vars.NTrialsTotal);
-        vars.faceGenderSwitch = mixArray(faceGendersArray);
-        vars.faceGenderSwitch(vars.faceGenderSwitch==2) = 0;    % change to [0 | 1]
-        
         stair.grain = 201;                                  % Grain of posterior, high numbers make method more precise at the cost of RAM and time to compute.
         %Always check posterior after method completes [using e.g., :
         %image(PAL_Scale0to1(PM.pdf)*64)] to check whether appropriate
@@ -48,15 +43,16 @@ switch vars.Procedure
         stair.stimRange = 0:1:200;
         
         %Define parameter ranges to be included in posterior
-        stair.priorAlphaRange = 0.01:.5:199;
+        stair.F.priorAlphaRange = 0.01:.5:150;                              % Low start
+        stair.M.priorAlphaRange = 50:.5:199;                                % High start
         stair.priorBetaRange = linspace(log10(1),log10(16),stair.grain);    % Use log10 transformed values of beta (slope) parameter in PF   
 %         stair.priorBetaRange = 0:.05:5;                                   % non-log10 beta also works 
         stair.priorGammaRange = 0.01;                                       % fixed value (using vector here would make it a free parameter)
         stair.priorLambdaRange = .02;                    
        
         %Initialize PM structure
-        % female avg face
-        stair.F.PM = PAL_AMPM_setupPM('priorAlphaRange',stair.priorAlphaRange,...
+        % LOW START
+        stair.F.PM = PAL_AMPM_setupPM('priorAlphaRange',stair.F.priorAlphaRange,...
             'priorBetaRange',stair.priorBetaRange,...
             'priorGammaRange',stair.priorGammaRange,...
             'priorLambdaRange',stair.priorLambdaRange,...
@@ -64,8 +60,8 @@ switch vars.Procedure
             'PF' , stair.PF,...
             'stimRange',stair.stimRange);
         
-        % male avg face
-        stair.M.PM = PAL_AMPM_setupPM('priorAlphaRange',stair.priorAlphaRange,...
+        % HIGH START
+        stair.M.PM = PAL_AMPM_setupPM('priorAlphaRange',stair.M.priorAlphaRange,...
             'priorBetaRange',stair.priorBetaRange,...
             'priorGammaRange',stair.priorGammaRange,...
             'priorLambdaRange',stair.priorLambdaRange,...
@@ -171,11 +167,13 @@ switch vars.Procedure
     
     case 1 % 1 - Psi method adaptive   
         
-        % Interleave M & F face staircases                              <--- ALSO FOUR STAIRCASES?? ###
+        % Interleave High and Low start face staircases                             
         vars.stairSwitch = [zeros(stair.NumTrials, 1); ones(stair.NumTrials, 1)];
-        randomorder = randperm(length(vars.stairSwitch));
-        vars.stairSwitch = vars.stairSwitch(randomorder);
-        
+        vars.stairSwitch = mixArray(vars.stairSwitch);
+             
+        % Interleave face genders 
+        vars.faceGenderSwitch = [zeros(stair.NumTrials, 1); ones(stair.NumTrials, 1)];
+        vars.faceGenderSwitch = mixArray(faceGendersArray);
         
     case 2 % 2 - N-down staircase
         
