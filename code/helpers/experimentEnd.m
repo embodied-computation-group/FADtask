@@ -39,6 +39,9 @@ elseif vars.Error
     csvName = strcat(vars.OutputFolder, vars.DataFileName, '.csv');
     struct2csv(Results, csvName);
     
+    ShowCursor;
+    sca;
+    
     disp(['Run crashed. Results were saved as: ', vars.DataFileName]);
     disp(' ** Error!! ***')
     

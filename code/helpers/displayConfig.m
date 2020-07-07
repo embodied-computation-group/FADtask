@@ -50,6 +50,6 @@ scr.BackgroundGray = GrayIndex(scr.screenID);
 White = WhiteIndex(scr.screenID);
 Black = BlackIndex(scr.screenID);
 scr.TextColour = Black;
-
+scr.AccentColour = [255 0 0]; % Red
 
 end

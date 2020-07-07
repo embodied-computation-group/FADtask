@@ -113,13 +113,13 @@ end
 
 
 %% Task timing
-vars.fixedTiming = 0;       % Flag to force fixed timing for affect response & conf rating. Set 1 for MRI, 0 for behav
+vars.fixedTiming = 1;       % Flag to force fixed timing for affect response & conf rating. Set 1 for MRI, 0 for behav
 vars.RepeatMissedTrials = 0;
 vars.StimT = 1;      % sec
 vars.RespT = 2;      % sec
-vars.ConfT = 3;      % sec
-vars.ITI_min = 1;    % variable ITI (1-2s)
-vars.ITI_max = 2; 
+vars.ConfT = 5;      % sec
+vars.ITI_min = 2;    % variable ITI (1-2s)
+vars.ITI_max = 3; 
 vars.ITI = randInRange(vars.ITI_min, vars.ITI_max, [vars.NTrialsTotal,1]);
 vars.PauseFreq = 100;
 % if vars.ConfRating 
@@ -128,30 +128,29 @@ vars.PauseFreq = 100;
 % end
 
 % Instructions
+switch vars.InputDevice
+    
+    case 1 % Keyboard
+        
+    case 2 % Mouse
+        
+end
+
 switch vars.ConfRating
     
     case 1
         
-        switch vars.InputDevice
-            
-            case 1 % Keyboard
+        
                 vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n Then, rate how confident you are in your choice using the number keys. \n \n Unsure (1), Sure (2), and Very sure (3). \n \n The scan will begin soon...';
                 vars.InstructionConf = 'Rate your confidence \n \n Unsure (1)     Sure (2)     Very sure (3)';
 
-            case 2 % Mouse
+            
                 vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left button                         HAPPY - Right button \n \n \n \n Then, rate how confident you are in your choice using the mouse. \n \n Unsure (0), Sure (50), and Very sure (100). \n \n The scan will begin soon...';
                 vars.InstructionConf = 'Rate your confidence using the mouse. Left click to confirm.';
                 vars.ConfEndPoins = {'0', '100'};
         end
     case 0
-        switch vars.InputDevice
-            
-            case 1 % Keyboard
-                vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n The scan will begin soon...';
-            case 2 % Mouse
-                vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left button                         HAPPY - Right button \n \n \n \n The scan will begin soon...';
-        end
-        
+        vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n The scan will begin soon...';
 end
 vars.InstructionQ = 'Angry (L)     or     Happy (R)';
 vars.InstructionPause = 'Take a short break... \n \n When you are ready to continue, press ''Space''...';
