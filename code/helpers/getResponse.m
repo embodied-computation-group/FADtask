@@ -19,7 +19,6 @@ function [vars] = getResponse(keys, scr, vars)
 % Last edit: 07/07/2020
 
 feedbackString = 'O';
-tic
 % loop until valid key is pressed or RespT is reached
 while ((GetSecs - vars.StartRT) <= vars.RespT)
     
@@ -72,60 +71,47 @@ while ((GetSecs - vars.StartRT) <= vars.RespT)
             vars.EndRT = GetSecs;
     end
     
-    % if we want to stop the response time interval when a response has
-    % been made...
+    %% Brief feedback
+    if vars.Resp% happy
+        emotString = 'Happy';
+        feedbackXPos = ((scr.winRect(3)/2)+150);
+    else
+        emotString = 'Angry';
+        feedbackXPos = ((scr.winRect(3)/2)-250);
+    end
+    
+    % fixed timing - wait for response interval to pass
     if vars.fixedTiming
-            % Brief feedback
-            if ~isnan(vars.Resp) && (vars.ValidTrial(1))
-                if vars.Resp% happy
-                    emotString = 'Happy';
-                    feedbackXPos = ((scr.winRect(3)/2)+150);
-                else
-                    emotString = 'Angry';
-                    feedbackXPos = ((scr.winRect(3)/2)-250);
-                end
-                
-                Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
-                DrawFormattedText(scr.win, [vars.InstructionQ], 'center', 'center', scr.TextColour);
-                DrawFormattedText(scr.win, feedbackString, feedbackXPos, ((scr.winRect(4)/2)+150), scr.AccentColour);
-                [~, ~] = Screen('Flip', scr.win);
-%                 WaitSecs(0.5);
-                
-                outputString = ['Response recorded: ', emotString];
-                
-            else
-                outputString = 'No response recorded';
-            end
+        if ~isnan(vars.Resp) && (vars.ValidTrial(1))    % valid trial
+            Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
+            DrawFormattedText(scr.win, [vars.InstructionQ], 'center', 'center', scr.TextColour);
+            DrawFormattedText(scr.win, feedbackString, feedbackXPos, ((scr.winRect(4)/2)+150), scr.AccentColour);
+            [~, ~] = Screen('Flip', scr.win);
+            
+            outputString = ['Response recorded: ', emotString];
+        else
+            outputString = 'No response recorded';
+        end
         
     else    % Variable timing
-            % Brief feedback
-            if ~isnan(vars.Resp) && (vars.ValidTrial(1))
-                if vars.Resp% happy
-                    emotString = 'Happy';
-                    feedbackXPos = ((scr.winRect(3)/2)+150);
-                else
-                    emotString = 'Angry';
-                    feedbackXPos = ((scr.winRect(3)/2)-250);
-                end
-                
-                Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
-                DrawFormattedText(scr.win, [vars.InstructionQ], 'center', 'center', scr.TextColour);
-                DrawFormattedText(scr.win, feedbackString, feedbackXPos, ((scr.winRect(4)/2)+150), scr.AccentColour);
-                [~, ~] = Screen('Flip', scr.win);
-                WaitSecs(0.3);
-                
-                outputString = ['Response recorded: ', emotString];
-                
-            else
-                outputString = 'No response recorded';
-            end
+        if ~isnan(vars.Resp) && (vars.ValidTrial(1))
+            Screen('FillRect', scr.win, scr.BackgroundGray, scr.winRect);
+            DrawFormattedText(scr.win, [vars.InstructionQ], 'center', 'center', scr.TextColour);
+            DrawFormattedText(scr.win, feedbackString, feedbackXPos, ((scr.winRect(4)/2)+150), scr.AccentColour);
+            [~, ~] = Screen('Flip', scr.win);
+            WaitSecs(0.3);
             
-            WaitSecs(0.2);
-            break;
+            outputString = ['Response recorded: ', emotString];
+        else
+            outputString = 'No response recorded';
+        end
+        
+        WaitSecs(0.2);
+        break;
     end
     
 end
 
 disp(outputString);
-toc
+
 end
