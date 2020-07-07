@@ -6,7 +6,7 @@ function [scr] = displayConfig(scr)
 %   scr         struct with screen / display settings
 % 
 % Niia Nikolova
-% Last edit: 11/06/2020
+% Last edit: 16/06/2020
 
 
 %% Set-up screen
@@ -19,14 +19,16 @@ else
 end
 
 if scr.ExternalMonitor
-    scr.screenID = max(Screen('Screens'));              
+%     scr.screenID = max(Screen('Screens')); 
+    scr.screenID = 1;
     if ~isfield(scr,'MonitorHeight') || isempty(scr.MonitorHeight)
         scr.MonitorHeight = 30; end     % in cm 
     if ~isfield(scr,'MonitorWidth') || isempty(scr.MonitorWidth)
         scr.MonitorWidth = 53; end
     if ~isfield(scr,'ViewDist') || isempty(scr.ViewDist)
-        scr.ViewDist = 75; end
+        scr.ViewDist = 80; end
     scr.GammaGuess = 2.3;
+    
 else % Laptop
     scr.screenID = min(Screen('Screens')); 
     if ~isfield(scr,'MonitorHeight') || isempty(scr.MonitorHeight)

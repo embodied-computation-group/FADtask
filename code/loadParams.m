@@ -7,7 +7,7 @@
 % ### MCS procedure has not been tested recently
 %
 % Niia Nikolova
-% Last edit: 28/05/2020
+% Last edit: 16/06/2020
 
 
 %% Key flags
@@ -15,7 +15,8 @@ vars.ConfRating = 0;                                         % Confidence rating
 vars.Procedure = 1;                                          % 1 - Psi method adaptive, doi:https://doi.org/10.1167/13.7.3
                                                              % 2 - N-down staircase
                                                              % 3 - Method of Constant Stimuli (used in Pilot 1)
-
+useEyeLink = 0;                                                          
+vars.InputDevice = 2;                                          % Response method for conf rating. 1 - keyboard 2 - mouse
                                                              
 % Get current timestamp & set filename
 startTime = clock;      
@@ -109,23 +110,33 @@ end
 vars.StimT = 1;      % sec
 vars.RespT = 2;      % sec
 vars.ConfT = 5;      % sec
-vars.ITI_min = 1;    % variable ITI (1-2s)
-vars.ITI_max = 2; 
+vars.ITI_min = 2;    % variable ITI (1-2s)
+vars.ITI_max = 3; 
 vars.ITI = randInRange(vars.ITI_min, vars.ITI_max, [vars.NTrialsTotal,1]);
-if vars.ConfRating 
-    vars.PauseFreq = 50; else
-    vars.PauseFreq = 100; 
-end
+vars.PauseFreq = 100;
+% if vars.ConfRating 
+%     vars.PauseFreq = 50; else
+%     vars.PauseFreq = 100; 
+% end
 
 % Instructions
 switch vars.ConfRating
     
     case 1
-        vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n Then, rate how confident you are in your choice using the number keys. \n \n Unsure (1), Sure (2), and Very sure (3). \n \n Press ''Space'' to start...';
-        vars.InstructionConf = 'Rate your confidence \n \n Unsure (1)     Sure (2)     Very sure (3)';
-    
+        
+        switch vars.InputDevice
+            
+            case 1 % Keyboard
+                vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n Then, rate how confident you are in your choice using the number keys. \n \n Unsure (1), Sure (2), and Very sure (3). \n \n The scan will begin soon...';
+                vars.InstructionConf = 'Rate your confidence \n \n Unsure (1)     Sure (2)     Very sure (3)';
+
+            case 2 % Mouse
+                vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n Then, rate how confident you are in your choice using the mouse. \n \n Unsure (0), Sure (50), and Very sure (100). \n \n The scan will begin soon...';
+                vars.InstructionConf = 'Rate your confidence using the mouse. Left click to confirm.';
+                vars.ConfEndPoins = {'0', '100'};
+        end
     case 0
-        vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n Press ''Space'' to start...';
+        vars.InstructionTask = 'Decide if the face presented on each trial is angry or happy. \n \n ANGRY - Left arrow key                         HAPPY - Right arrow key \n \n \n \n The scan will begin soon...';
 end
 vars.InstructionQ = 'Angry (L)     or     Happy (R)';
 vars.InstructionPause = 'Take a short break... \n \n When you are ready to continue, press ''Space''...';
