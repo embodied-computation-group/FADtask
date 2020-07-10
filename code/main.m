@@ -16,7 +16,7 @@ function main(vars, scr)
 % 16.06.2020        NN added useEyeLink flag to allow gaze recording
 %
 % Niia Nikolova
-% Last edit: 16/06/2020
+% Last edit: 10/07/2020
 
 
 % Load the parameters
@@ -109,11 +109,20 @@ try
     DrawFormattedText(scr.win, [vars.InstructionTask], 'center', 'center', scr.TextColour);
     [~, ~] = Screen('Flip', scr.win);
     
+    new_line;
+    disp('Waiting for trigger.'); new_line;
+    
     while keys.KeyCode(keys.Trigger) == 0                                    % Wait for trigger
         [~, ~, keys.KeyCode] = KbCheck;
         WaitSecs(0.001);
     end
-    Results.SessionStartT = GetSecs;            % session start = trigger 1
+    Results.FirstTriggerT = GetSecs;
+    
+%      If scanning, wait for dummy volumes
+    if ~vars.emulate
+        WaitSecs(vars.TR*vars.Dummies);end
+    
+    Results.SessionStartT = GetSecs;            % session start = trigger 1 + dummy vols
     
     if useEyeLink
         Eyelink('message','STARTEXP');
@@ -446,7 +455,12 @@ try
         
     end%thisTrial
     
+    Results.SessionEndT = GetSecs - Results.SessionStartT;
     vars.RunSuccessfull = 1;
+    
+    % If scanning, wait for dummy volumes
+    if ~vars.emulate
+        WaitSecs(vars.TR*vars.Overrun);end
     
     % Save, mark the run
     experimentEnd(vars, scr, keys, Results, stair);

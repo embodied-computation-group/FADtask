@@ -9,17 +9,20 @@
 % ### MCS procedure has not been tested recently
 %
 % Niia Nikolova
-% Last edit: 07/07/2020
+% Last edit: 10/07/2020
 
 
 %% Key flags
-vars.ConfRating = 0;                                         % Confidence rating? (1 yes, 0 no)
-vars.Procedure = 1;                                          % 1 - Psi method adaptive, doi:https://doi.org/10.1167/13.7.3
-                                                             % 2 - N-down staircase
-                                                             % 3 - Method of Constant Stimuli (used in Pilot 1)
-useEyeLink = 0;                                                          
-vars.InputDevice = 2;                                        % Response method for conf rating. 1 - keyboard 2 - mouse
+vars.emulate        = 0;                % 0 scanning, 1 testing
+vars.ConfRating     = 0;                % Confidence rating? (1 yes, 0 no)
+vars.InputDevice    = 2;                % Response method for conf rating. 1 - keyboard 2 - mouse
+useEyeLink          = 0;                                                          
+
+vars.Procedure      = 1;                % 1 - Psi method adaptive, doi:https://doi.org/10.1167/13.7.3
+                                        % 2 - N-down staircase
+                                        % 3 - Method of Constant Stimuli (used in Pilot 1)
 vars.RepeatMissedTrials = 0; 
+
 
 % Get current timestamp & set filename
 startTime = clock;      
@@ -111,7 +114,7 @@ end
 
 
 %% Task timing
-vars.fixedTiming = 0;       % Flag to force fixed timing for affect response & conf rating. Set 1 for MRI, 0 for behav
+vars.fixedTiming = 0;       % Flag to force fixed timing for affect response & conf rating. 1 - fixed timing, 2 - self-paced
 vars.RepeatMissedTrials = 0;
 vars.StimT = 1;      % sec
 vars.RespT = 2;      % sec
@@ -124,8 +127,25 @@ vars.PauseFreq = 100;
 %     vars.PauseFreq = 50; else
 %     vars.PauseFreq = 100; 
 % end
+singleTrialDuration = vars.StimT + vars.RespT + (vars.ConfT-1) + vars.ITI_max;
+vars.sessionDuration = singleTrialDuration * vars.NTrialsTotal;
 
-% Instructions
+%% MR params
+vars.TR                 = 1.4;           % Seconds per volume
+vars.Dummies            = 4;             % Dummy volumes at start
+vars.Overrun            = 4;             % Dummy volumes at end
+vars.VolsPerExpmt       = round(vars.sessionDuration /vars.TR) + vars.Dummies + vars.Overrun;
+
+if vars.fixedTiming
+    disp(['Desired number of volumes: ', num2str(vars.VolsPerExpmt)]);
+else
+    disp(['Desired number of volumes (upper limit of session duration): ', num2str(vars.VolsPerExpmt)]);
+end
+disp('Press any key to continue.');
+pause;
+
+
+%% Instructions
 switch vars.ConfRating
     
     case 1

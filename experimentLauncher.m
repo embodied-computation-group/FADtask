@@ -19,7 +19,7 @@ function experimentLauncher()
 % ======================================================
 %
 % Niia Nikolova
-% Last edit: 16/06/2020
+% Last edit: 10/07/2020
 
 
 %% Initial settings
