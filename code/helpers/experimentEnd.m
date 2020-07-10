@@ -1,13 +1,14 @@
 function experimentEnd(vars, scr, keys, Results, stair)
 %function experimentEnd(vars, scr, keys, Results, stair)
+%
+% Project: Face Affect Discrimination (FAD) Task, part of CWT
+%
+% End of experiment routine. Shows a message to let the user know if the
+% run has been aborted or crashed, saves results, and cleans up
 
-% clean up the stair structure & sub-structures (delete objects and 5D vars)
-% fields = {'PF'};
-% stair = rmfield(stair,fields);
-% fields = {'PF', 'LUT', 'posteriorTplus1givenSuccess', 'posteriorTplus1givenFailure'};
-% stair.F.PM = rmfield(stair.F.PM, fields);
-% fields = {'PF', 'LUT', 'posteriorTplus1givenSuccess', 'posteriorTplus1givenFailure'};
-% stair.M.PM = rmfield(stair.M.PM, fields);
+%
+% Niia Nikolova
+% Last edit: 07/07/2020
 
 
 if vars.Aborted
@@ -62,7 +63,7 @@ else % Successfull run
     % and as .csv
     Results.stair = stair;                      % Add staircase structure to Results to save
     csvName = strcat(vars.OutputFolder, vars.DataFileName, '.csv');
-    struct2csv(Results, csvName);                                       %<----- PsiAdaptive: NOT SAVING .csv due to PF objects in Results struct#####
+    struct2csv(Results, csvName);                                       %<----- N.B. PsiAdaptive: DOES NOT SAVE .csv due to PF objects in Results struct#####
     
 end
 

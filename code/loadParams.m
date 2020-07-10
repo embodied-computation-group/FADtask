@@ -4,10 +4,12 @@
 %
 % Sets key parameters, called by main.m
 %
+% One Psi staircase starts High, one Low. Data are collapsed accross M&F
+% average faces, and gender on each trial is randomized
 % ### MCS procedure has not been tested recently
 %
 % Niia Nikolova
-% Last edit: 16/06/2020
+% Last edit: 07/07/2020
 
 
 %% Key flags
@@ -173,7 +175,7 @@ switch vars.Procedure
              
         % Interleave face genders 
         vars.faceGenderSwitch = [zeros(stair.NumTrials, 1); ones(stair.NumTrials, 1)];
-        vars.faceGenderSwitch = mixArray(faceGendersArray);
+        vars.faceGenderSwitch = mixArray(vars.faceGenderSwitch);
         
     case 2 % 2 - N-down staircase
         

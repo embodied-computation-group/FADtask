@@ -10,6 +10,7 @@ function experimentLauncher()
 %       FAD_v1-2    Pilot 2. Adaptive (psi), stimuli two averaged faces (M & F), 
 %                   each based on 9 KDEF individuals, OR N-down staircase (4 interleaved stairs)
 %       FAD_v1-3    Pilot 3. MRI task, Adaptive (psi), stimuli two averaged faces (M & F)
+%       FAD_v1-4    Pilot 4. MRI task, Adaptive (psi), collapsed accross face gender (M & F)
 %
 % ======================================================
 %

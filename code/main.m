@@ -85,8 +85,8 @@ try
     vars.Error = 0;
     WaitSecs(0.1);
     GetSecs;
-    vars.Resp = NaN;
-    vars.ConfResp = NaN;
+    vars.Resp = 888;
+    vars.ConfResp = 888;
     vars.abortFlag = 0;
     WaitSecs(0.500);
     [~, ~, keys.KeyCode] = KbCheck;
